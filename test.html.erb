@@ -3,32 +3,39 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
-    <h1>Test！！！！！！！！！！！！！</h1>
+    <h1>Welcome to our page we are really happy to welcome you </h1>
 
     <% require 'pg' %>
 
     <% connection = PG::connect(dbname: "goya") %>
+
     <% connection.internal_encoding = "UTF-8" %>
 
-    <form action="indicate.cgi" method="POST">
-       Please enter the letters below<br><br>
-      <input type="text"  name="input" ><br>
-      <input type="submit" name="submit" >
-    </form>
-
     <% result = connection.exec("select date, weight, give_for from crops where not give_for='自家消費';") %>
+    <% result1 = connection.exec("select date, weight, give_for from crops where  quality='f';") %>
     <% date = [] %>
-
+    <% date1 = [] %>
     <% result.each do |record| %>
       <%  date << "Size of bitter gourd: #{record ["weight"]} Sold to: #{record ["give_for"]}" %>
+      
     <% end %>
-
+    <% result1.each do |record| %>
+      <%  date1 << "Size of bitter gourd: #{record ["weight"]} Sold to: #{record ["give_for"]}" %> 
+    <% end %>
     <form action="goya.cgi" method="POST">
        Press the button below to jump to the size of the bitter gourd and the information page of the buyer<br><br>
-       <!-- Substitute the data you want to send for value -->
-       <!-- Make name = "goya" a mark of information -->
-      <input type="text" name="goya" value="<%= date.join(' ') %>">
+      <input type="text" name="goya" value ="<%= date.join(' ') %>">
       <input type="submit" name="submit" >
+      <br/>
+      <br/>
+
+    </form>
+    <form action="goya1.cgi" method="POST">
+    Press a function that brings out a page with information of poor quality (false)
+    <br/>
+    <br/>
+    <input type="text" name="goya1" value ="<%= date1.join(' ') %>">
+    <input type="submit" name="submit" >
     </form>
   </body>
 </html>
